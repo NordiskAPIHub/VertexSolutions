@@ -2,25 +2,55 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LOCALE_COOKIE_NAME, type Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const navigation = [
-  { href: "/", label: "Forside" },
-  { href: "/losninger", label: "Løsninger" },
-  { href: "/cases", label: "Cases" },
-  { href: "/teknologi-sikkerhed", label: "Teknologi & Sikkerhed" },
-  { href: "/om-os", label: "Om os" },
-  { href: "/kontakt", label: "Kontakt" },
+  { href: "/", da: "Forside", en: "Home" },
+  { href: "/losninger", da: "Løsninger", en: "Solutions" },
+  { href: "/cases", da: "Cases", en: "Cases" },
+  { href: "/teknologi-sikkerhed", da: "Teknologi & Sikkerhed", en: "Technology & Security" },
+  { href: "/om-os", da: "Om os", en: "About" },
+  { href: "/kontakt", da: "Kontakt", en: "Contact" },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
+  const [activeLocale, setActiveLocale] = useState<Locale>(locale);
   const pathname = usePathname();
-  const primaryNavigation = navigation.slice(0, 6);
+  const router = useRouter();
+  const primaryNavigation = useMemo(() => navigation.slice(0, 6), []);
+  const isDanish = activeLocale === "da";
+
+  const labels = isDanish
+    ? {
+        primaryNavigation: "Primær navigation",
+        openMenu: "Åbn menu",
+        closeMenu: "Luk menu",
+        switchLanguage: "Skift sprog",
+        bookMeeting: "Book et møde",
+        seeCases: "Se cases",
+      }
+    : {
+        primaryNavigation: "Primary navigation",
+        openMenu: "Open menu",
+        closeMenu: "Close menu",
+        switchLanguage: "Switch language",
+        bookMeeting: "Book a meeting",
+        seeCases: "See cases",
+      };
+
+  function switchLanguage() {
+    const nextLocale: Locale = activeLocale === "da" ? "en" : "da";
+    document.cookie = `${LOCALE_COOKIE_NAME}=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
+    setActiveLocale(nextLocale);
+    setOpen(false);
+    router.refresh();
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-black/10 bg-white/95 backdrop-blur-sm">
@@ -41,7 +71,7 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primær navigation">
+        <nav className="hidden items-center gap-1 lg:flex" aria-label={labels.primaryNavigation}>
           {primaryNavigation.map((item) => (
             <Link
               key={item.href}
@@ -53,14 +83,36 @@ export function SiteHeader() {
                   : "text-[#000000] hover:text-[var(--brand-blue)]",
               )}
             >
-              {item.label}
+              {isDanish ? item.da : item.en}
             </Link>
           ))}
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          <button
+            type="button"
+            onClick={switchLanguage}
+            className="inline-flex h-9 items-center gap-2 rounded-md border border-black/15 px-3 text-sm font-semibold text-[#000000] transition-colors hover:border-[var(--brand-blue)] hover:text-[var(--brand-blue)]"
+            aria-label={labels.switchLanguage}
+          >
+            {isDanish ? (
+              <>
+                <span className="relative h-4 w-6 overflow-hidden rounded-[2px]">
+                  <Image src="/UK flag.png" alt="UK flag" fill className="object-cover" />
+                </span>
+                EN
+              </>
+            ) : (
+              <>
+                <span className="relative h-4 w-6 overflow-hidden rounded-[2px]">
+                  <Image src="/DK flag.png" alt="Danish flag" fill className="object-cover" />
+                </span>
+                DA
+              </>
+            )}
+          </button>
           <Button asChild size="sm">
-            <Link href="/kontakt">Book et møde</Link>
+            <Link href="/kontakt">{labels.bookMeeting}</Link>
           </Button>
         </div>
 
@@ -68,7 +120,7 @@ export function SiteHeader() {
           type="button"
           onClick={() => setOpen((value) => !value)}
           className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-black/15 bg-transparent text-[#000000] lg:hidden"
-          aria-label={open ? "Luk menu" : "Åbn menu"}
+          aria-label={open ? labels.closeMenu : labels.openMenu}
           aria-expanded={open}
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -90,18 +142,40 @@ export function SiteHeader() {
                     : "text-[#000000]",
                 )}
               >
-                {item.label}
+                {isDanish ? item.da : item.en}
               </Link>
             ))}
             <div className="mt-2 flex gap-2">
+              <button
+                type="button"
+                onClick={switchLanguage}
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-md border border-black/15 px-3 py-2 text-sm font-semibold text-[#000000]"
+                aria-label={labels.switchLanguage}
+              >
+                {isDanish ? (
+                  <>
+                    <span className="relative h-4 w-6 overflow-hidden rounded-[2px]">
+                      <Image src="/UK flag.png" alt="UK flag" fill className="object-cover" />
+                    </span>
+                    EN
+                  </>
+                ) : (
+                  <>
+                    <span className="relative h-4 w-6 overflow-hidden rounded-[2px]">
+                      <Image src="/DK flag.png" alt="Danish flag" fill className="object-cover" />
+                    </span>
+                    DA
+                  </>
+                )}
+              </button>
               <Button asChild variant="secondary" size="sm" className="flex-1">
                 <Link href="/cases" onClick={() => setOpen(false)}>
-                  Se cases
+                  {labels.seeCases}
                 </Link>
               </Button>
               <Button asChild size="sm" className="flex-1">
                 <Link href="/kontakt" onClick={() => setOpen(false)}>
-                  Book et møde
+                  {labels.bookMeeting}
                 </Link>
               </Button>
             </div>

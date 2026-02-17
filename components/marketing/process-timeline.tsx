@@ -4,7 +4,13 @@ type TimelineStep = {
   deliverables?: string[];
 };
 
-export function ProcessTimeline({ steps }: { steps: TimelineStep[] }) {
+export function ProcessTimeline({
+  steps,
+  deliverablesLabel = "Deliverables",
+}: {
+  steps: TimelineStep[];
+  deliverablesLabel?: string;
+}) {
   return (
     <div className="mt-12">
       <ol className="relative">
@@ -26,7 +32,7 @@ export function ProcessTimeline({ steps }: { steps: TimelineStep[] }) {
             {step.deliverables && step.deliverables.length > 0 ? (
               <div className="mt-4">
                 <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#000000]">
-                  I får
+                  {deliverablesLabel}
                 </p>
                 <ul className="mt-2 space-y-1 text-[15px] leading-[1.55] text-[#000000]">
                   {step.deliverables.map((item) => (

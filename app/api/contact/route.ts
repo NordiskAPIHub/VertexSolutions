@@ -7,15 +7,26 @@ type ContactPayload = {
   email: string;
   inquiryType: string;
   message: string;
+  lang: "da" | "en";
 };
 
-const inquiryTypeLabels: Record<string, string> = {
-  moede: "Book et møde",
-  losning: "Skitsering af løsning",
-  services: "Pilot / production build",
-  sikkerhed: "Teknologi & sikkerhed",
-  demo: "Case / demo",
-  andet: "Andet",
+const inquiryTypeLabels: Record<"da" | "en", Record<string, string>> = {
+  da: {
+    moede: "Book et møde",
+    losning: "Skitsering af løsning",
+    services: "Pilot / production build",
+    sikkerhed: "Teknologi & sikkerhed",
+    demo: "Case / demo",
+    andet: "Andet",
+  },
+  en: {
+    moede: "Book a meeting",
+    losning: "Solution scoping",
+    services: "Pilot / production build",
+    sikkerhed: "Technology & security",
+    demo: "Case / demo",
+    andet: "Other",
+  },
 };
 
 function sanitize(value: unknown) {
@@ -24,18 +35,26 @@ function sanitize(value: unknown) {
     .trim();
 }
 
+function normalizeLang(value: unknown): "da" | "en" {
+  return String(value ?? "").toLowerCase() === "en" ? "en" : "da";
+}
+
 function validate(payload: ContactPayload) {
+  const isDanish = payload.lang === "da";
+
   if (!payload.name || payload.name.length < 2) {
-    return "Udfyld venligst navn.";
+    return isDanish ? "Udfyld venligst navn." : "Please fill in your name.";
   }
   if (!payload.company || payload.company.length < 2) {
-    return "Udfyld venligst virksomhed/organisation.";
+    return isDanish
+      ? "Udfyld venligst virksomhed/organisation."
+      : "Please fill in company/organization.";
   }
   if (!payload.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
-    return "Udfyld venligst en gyldig e-mail.";
+    return isDanish ? "Udfyld venligst en gyldig e-mail." : "Please enter a valid email.";
   }
   if (!payload.message || payload.message.length < 10) {
-    return "Beskeden er for kort.";
+    return isDanish ? "Beskeden er for kort." : "The message is too short.";
   }
   return null;
 }
@@ -54,12 +73,16 @@ async function sendWithResend(payload: ContactPayload) {
     from: fromEmail,
     to: [toEmail],
     replyTo: payload.email,
-    subject: `Ny henvendelse: ${inquiryTypeLabels[payload.inquiryType] ?? "Kontaktformular"}`,
+    subject: `${
+      payload.lang === "da" ? "Ny henvendelse" : "New inquiry"
+    }: ${inquiryTypeLabels[payload.lang][payload.inquiryType] ?? "Contact form"}`,
     text: [
-      `Navn: ${payload.name}`,
-      `Virksomhed: ${payload.company}`,
-      `E-mail: ${payload.email}`,
-      `Emne: ${inquiryTypeLabels[payload.inquiryType] ?? payload.inquiryType}`,
+      `${payload.lang === "da" ? "Navn" : "Name"}: ${payload.name}`,
+      `${payload.lang === "da" ? "Virksomhed" : "Company"}: ${payload.company}`,
+      `Email: ${payload.email}`,
+      `${payload.lang === "da" ? "Emne" : "Topic"}: ${
+        inquiryTypeLabels[payload.lang][payload.inquiryType] ?? payload.inquiryType
+      }`,
       "",
       payload.message,
     ].join("\n"),
@@ -84,13 +107,15 @@ async function sendWithFormspree(payload: ContactPayload) {
       name: payload.name,
       company: payload.company,
       email: payload.email,
-      inquiry_type: inquiryTypeLabels[payload.inquiryType] ?? payload.inquiryType,
+      inquiry_type: inquiryTypeLabels[payload.lang][payload.inquiryType] ?? payload.inquiryType,
       message: payload.message,
     }),
   });
 
   if (!response.ok) {
-    throw new Error("Formspree-afsendelse fejlede.");
+    throw new Error(
+      payload.lang === "da" ? "Formspree-afsendelse fejlede." : "Formspree delivery failed.",
+    );
   }
 
   return true;
@@ -106,6 +131,7 @@ export async function POST(request: Request) {
       email: sanitize(body.email),
       inquiryType: sanitize(body.inquiryType).toLowerCase() || "moede",
       message: sanitize(body.message),
+      lang: normalizeLang(body.lang),
     };
 
     const validationError = validate(payload);
@@ -126,7 +152,12 @@ export async function POST(request: Request) {
     } catch (error) {
       console.error("Contact delivery error:", error);
       return NextResponse.json(
-        { error: "Beskeden kunne ikke sendes. Prøv igen om lidt." },
+        {
+          error:
+            payload.lang === "da"
+              ? "Beskeden kunne ikke sendes. Prøv igen om lidt."
+              : "The message could not be sent. Please try again shortly.",
+        },
         { status: 502 },
       );
     }
@@ -134,12 +165,14 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "Kontaktflow er ikke konfigureret. Sæt RESEND_API_KEY eller FORMSPREE_ENDPOINT i miljøvariabler.",
+          payload.lang === "da"
+            ? "Kontaktflow er ikke konfigureret. Sæt RESEND_API_KEY eller FORMSPREE_ENDPOINT i miljøvariabler."
+            : "Contact flow is not configured. Set RESEND_API_KEY or FORMSPREE_ENDPOINT in environment variables.",
       },
       { status: 500 },
     );
   } catch (error) {
     console.error("Contact API parse error:", error);
-    return NextResponse.json({ error: "Ugyldig forespørgsel." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 }
