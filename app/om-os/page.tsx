@@ -44,7 +44,6 @@ const founderProfilesByLocale: Record<
     imageAlt: string;
     intro: string;
     focus: string[];
-    experience: string[];
     education: string[];
   }>
 > = {
@@ -62,11 +61,6 @@ const founderProfilesByLocale: Record<
         "Full-stack udvikling og SaaS-leverance",
         "Automatisering af dokument- og dataflows",
       ],
-      experience: [
-        "Teknisk chef, Økonomi & Personale Academy (2024–nu): udvikling af Lovguiden og semantisk juridisk søgning.",
-        "Full Stack Engineer, Spaak Technologies (2025): kode, LLM-træning og produktionsnær implementering.",
-        "Tidligere hardware- og EMC-erfaring (LINAK/DTU), som styrker systemdisciplin og robust design.",
-      ],
       education: ["B.Eng., Electrical Engineering, DTU (2018–2022)"],
     },
     {
@@ -81,11 +75,6 @@ const founderProfilesByLocale: Record<
         "Procesoptimering og digital implementering",
         "Projektgovernance, stakeholder management og change management",
         "Platformstrategi og værdikæde i digitale forretningsmodeller",
-      ],
-      experience: [
-        "Bachelorprojekt med Novo Nordisk (2024–2025): procesoptimering, tværfaglige workshops og digital standardisering af handovers.",
-        "B2B Sales & Partnerships, SUPPLME (2024): kommerciel skalering og kunde-/partnerdialog.",
-        "Løbende driftsnær salgs- og kundeerfaring i operative roller.",
       ],
       education: [
         "MSc, Digital Business, Copenhagen Business School (2025–2027, igangværende)",
@@ -107,11 +96,6 @@ const founderProfilesByLocale: Record<
         "Full-stack development and SaaS delivery",
         "Automation of document and data flows",
       ],
-      experience: [
-        "Technical Lead, Økonomi & Personale Academy (2024–present): development of Lovguiden and semantic legal search.",
-        "Full Stack Engineer, Spaak Technologies (2025): coding, LLM training, and production-near implementation.",
-        "Previous hardware and EMC experience (LINAK/DTU), strengthening engineering discipline and robust design.",
-      ],
       education: ["B.Eng., Electrical Engineering, DTU (2018–2022)"],
     },
     {
@@ -126,11 +110,6 @@ const founderProfilesByLocale: Record<
         "Process optimization and digital implementation",
         "Project governance, stakeholder management, and change management",
         "Platform strategy and value chain design in digital business models",
-      ],
-      experience: [
-        "Bachelor thesis with Novo Nordisk (2024–2025): process optimization, cross-functional workshops, and digital handover standardization.",
-        "B2B Sales & Partnerships, SUPPLME (2024): commercial scaling and customer/partner dialogue.",
-        "Ongoing operational sales and customer experience in frontline roles.",
       ],
       education: [
         "MSc, Digital Business, Copenhagen Business School (2025–2027, ongoing)",
@@ -149,7 +128,6 @@ const copyByLocale: Record<
     foundersHeading: string;
     foundersDescription: string;
     focusHeading: string;
-    experienceHeading: string;
     educationHeading: string;
     ctaHeading: string;
     ctaDescription: string;
@@ -165,7 +143,6 @@ const copyByLocale: Record<
     foundersDescription:
       "Vertex er bygget på en klar arbejdsdeling: dyb teknisk arkitektur kombineret med forretningsmæssig forankring. Det gør os i stand til at levere løsninger, der både virker i kodebasen og i organisationen.",
     focusHeading: "Fokusområder",
-    experienceHeading: "Udvalgt erfaring",
     educationHeading: "Uddannelse",
     ctaHeading: "Skal vi vurdere jeres use-case?",
     ctaDescription: "Vi giver en præcis vurdering af potentiale, risiko og implementeringsvej.",
@@ -181,7 +158,6 @@ const copyByLocale: Record<
     foundersDescription:
       "Vertex is built on clear role separation: deep technical architecture combined with commercial execution. This enables solutions that work both in the codebase and in the organization.",
     focusHeading: "Focus areas",
-    experienceHeading: "Selected experience",
     educationHeading: "Education",
     ctaHeading: "Should we assess your use case?",
     ctaDescription: "We provide a precise assessment of potential, risk, and implementation path.",
@@ -229,17 +205,6 @@ export default async function AboutPage() {
                   </p>
                   <ul className="mt-3 space-y-2 text-[16px] text-[#000000]">
                     {profile.focus.map((item) => (
-                      <li key={item}>• {item}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="mt-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--brand-blue)]">
-                    {copy.experienceHeading}
-                  </p>
-                  <ul className="mt-3 space-y-2 text-[16px] text-[#000000]">
-                    {profile.experience.map((item) => (
                       <li key={item}>• {item}</li>
                     ))}
                   </ul>

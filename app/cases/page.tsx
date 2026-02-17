@@ -106,7 +106,12 @@ export default async function CasesPage() {
 
           <div className="grid gap-8 md:grid-cols-2">
             {cases.map((item) => (
-              <article key={item.slug} className="surface-card card-hover overflow-hidden">
+              <article key={item.slug} className="surface-card card-hover relative overflow-hidden">
+                <Link
+                  href={`/cases/${item.slug}`}
+                  aria-label={`${copy.detailsLabel}: ${item.title}`}
+                  className="absolute inset-0 z-10 rounded-[10px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2"
+                />
                 <div className="relative h-52 border-b border-black/10 bg-[var(--surface-strong)] md:h-56">
                   <Image src={item.image} alt={item.imageAlt} fill className="object-contain p-6" />
                 </div>
@@ -129,18 +134,15 @@ export default async function CasesPage() {
                   </ul>
 
                   <div className="flex flex-wrap items-center gap-5 pt-1">
-                    <Link
-                      href={`/cases/${item.slug}`}
-                      className="inline-flex items-center gap-2 text-[16px] font-semibold text-[var(--brand-blue)]"
-                    >
+                    <p className="inline-flex items-center gap-2 text-[16px] font-semibold text-[var(--brand-blue)]">
                       {copy.detailsLabel}
                       <ArrowUpRight className="size-4" />
-                    </Link>
+                    </p>
                     <a
                       href={item.externalUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-[16px] font-semibold text-black"
+                      className="relative z-20 inline-flex items-center gap-2 text-[16px] font-semibold text-black"
                     >
                       {copy.externalLabel}
                       <ArrowUpRight className="size-4" />

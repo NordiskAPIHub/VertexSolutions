@@ -60,53 +60,116 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
         <div className="section-shell space-y-8">
           <article className="surface-card rounded-[10px] p-8 md:p-10">
             <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--brand-blue)]">{detail.caseLabel}</p>
-            <h2 className="mt-4">{detail.caseTitle}</h2>
-            <p className="mt-4 text-[18px] font-medium leading-[1.6] text-black">{detail.challengeSummary}</p>
 
-            <div className="mt-8 space-y-8">
-              <section>
-                <h3 className="text-[28px] font-semibold leading-[1.2] text-black">{detail.situationHeading}</h3>
-                <p className="mt-3 text-[18px] leading-[1.6] text-black">{detail.situationText}</p>
-              </section>
+            <div className="mt-6">
+              <div className="relative h-64 overflow-hidden rounded-[10px] border border-black/10 bg-[var(--surface-strong)] md:h-[420px]">
+                <Image src={caseData.image} alt={caseData.imageAlt} fill className="object-cover" />
+              </div>
+            </div>
 
+            <div className="mt-10 space-y-10">
               <section>
-                <h3 className="text-[28px] font-semibold leading-[1.2] text-black">{detail.challengeHeading}</h3>
-                <ul className="mt-3 list-disc space-y-2 pl-6 text-[18px] leading-[1.6] text-black">
-                  {detail.challengePoints.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-              </section>
-
-              <section>
-                <h3 className="text-[28px] font-semibold leading-[1.2] text-black">{detail.solutionHeading}</h3>
-                <div className="mt-4 space-y-4">
-                  {detail.solutionPhases.map((phase) => (
-                    <div key={phase.title}>
-                      <p className="text-[18px] font-semibold leading-[1.4] text-black">{phase.title}</p>
-                      <p className="mt-1 text-[18px] leading-[1.6] text-black">{phase.description}</p>
+                <h2>{detail.overviewHeading}</h2>
+                <div className="mt-6 grid gap-4 md:grid-cols-2">
+                  {detail.overviewItems.map((item) => (
+                    <div key={item.label} className="rounded-[10px] border border-black/10 bg-white p-5">
+                      <p className="text-[14px] font-semibold uppercase tracking-[0.06em] text-[var(--brand-blue)]">
+                        {item.label}
+                      </p>
+                      <p className="mt-2 text-[18px] leading-[1.6] text-black">{item.value}</p>
                     </div>
                   ))}
                 </div>
               </section>
 
               <section>
-                <h3 className="text-[28px] font-semibold leading-[1.2] text-black">{detail.resultHeading}</h3>
+                <h2>{detail.situationChallengeHeading}</h2>
+                <p className="mt-4 text-[20px] font-medium leading-[1.5] text-black">{detail.situationLead}</p>
+
+                <div className="mt-6 grid gap-6 md:grid-cols-3">
+                  <div className="rounded-[10px] border border-black/10 bg-white p-5">
+                    <h3 className="text-[20px]">{detail.professionalSourcesHeading}</h3>
+                    <ul className="mt-3 list-disc space-y-2 pl-5 text-[17px] leading-[1.55] text-black">
+                      {detail.professionalSources.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="rounded-[10px] border border-black/10 bg-white p-5">
+                    <h3 className="text-[20px]">{detail.modelRiskHeading}</h3>
+                    <ul className="mt-3 list-disc space-y-2 pl-5 text-[17px] leading-[1.55] text-black">
+                      {detail.modelRiskPoints.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="rounded-[10px] border border-black/10 bg-white p-5">
+                    <h3 className="text-[20px]">{detail.needHeading}</h3>
+                    <ul className="mt-3 list-disc space-y-2 pl-5 text-[17px] leading-[1.55] text-black">
+                      {detail.needPoints.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              <section>
+                <h2>{detail.solutionHeading}</h2>
+                <p className="mt-4 text-[18px] leading-[1.6] text-black">{detail.solutionIntro}</p>
+
+                <div className="mt-6 space-y-4">
+                  {detail.solutionPhases.map((phase) => (
+                    <div key={phase.title} className="rounded-[10px] border border-black/10 bg-white p-5">
+                      <h3 className="text-[24px]">{phase.title}</h3>
+                      <ul className="mt-3 list-disc space-y-2 pl-5 text-[17px] leading-[1.55] text-black">
+                        {phase.points.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                      {phase.note ? <p className="mt-4 text-[17px] leading-[1.55] text-black">{phase.note}</p> : null}
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section>
+                <h2>{detail.architectureHeading}</h2>
+                <p className="mt-4 text-[18px] leading-[1.6] text-black">{detail.architectureIntro}</p>
                 <ul className="mt-3 list-disc space-y-2 pl-6 text-[18px] leading-[1.6] text-black">
-                  {detail.resultPoints.map((point) => (
-                    <li key={point}>{point}</li>
+                  {detail.architecturePoints.map((item) => (
+                    <li key={item}>{item}</li>
                   ))}
                 </ul>
+                <p className="mt-4 text-[18px] leading-[1.6] text-black">{detail.architectureOutro}</p>
+              </section>
+
+              <section>
+                <h2>{detail.resultHeading}</h2>
+                <p className="mt-4 text-[18px] leading-[1.6] text-black">{detail.resultIntro}</p>
+                <ul className="mt-3 list-disc space-y-2 pl-6 text-[18px] leading-[1.6] text-black">
+                  {detail.resultPoints.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                <p className="mt-4 text-[18px] leading-[1.6] text-black">{detail.resultOutro}</p>
+              </section>
+
+              <section>
+                <h2>{detail.positioningHeading}</h2>
+                <p className="mt-4 text-[18px] leading-[1.6] text-black">{detail.positioningIntro}</p>
+                <ul className="mt-3 list-disc space-y-2 pl-6 text-[18px] leading-[1.6] text-black">
+                  {detail.positioningPoints.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                <p className="mt-4 text-[18px] font-medium leading-[1.6] text-black">{detail.positioningOutro}</p>
               </section>
             </div>
 
-            <div className="mt-8 grid gap-4 sm:items-center">
-              <div className="relative h-24 overflow-hidden rounded-[8px] border border-black/10 bg-[var(--surface-strong)]">
-                <Image src={caseData.image} alt={caseData.imageAlt} fill className="object-contain p-4" />
-              </div>
-            </div>
-
-            <div className="mt-6 flex flex-wrap items-center gap-5">
+            <div className="mt-8 flex flex-wrap items-center gap-5">
               <a
                 href={caseData.externalUrl}
                 target="_blank"

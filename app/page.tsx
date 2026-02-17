@@ -6,6 +6,7 @@ import { CtaSection } from "@/components/marketing/cta-section";
 import { ProcessTimeline } from "@/components/marketing/process-timeline";
 import { VertexConvergenceSection } from "@/components/marketing/vertex-convergence-section";
 import { Button } from "@/components/ui/button";
+import { getCasesOverview } from "@/lib/cases";
 import { type Locale } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n-server";
 import { buildMetadata } from "@/lib/seo";
@@ -171,14 +172,10 @@ const pageCopyByLocale: Record<
     deliverablesLabel: string;
     previousCasesHeading: string;
     allCases: string;
-    visitLovguiden: string;
-    openCase: string;
     finalCtaHeading: string;
     finalCtaDescription: string;
     finalPrimaryCta: string;
     finalSecondaryCta: string;
-    caseSummary: string;
-    caseEffect: string;
   }
 > = {
   da: {
@@ -205,17 +202,11 @@ const pageCopyByLocale: Record<
     deliverablesLabel: "I får",
     previousCasesHeading: "Tidligere cases",
     allCases: "Se alle",
-    visitLovguiden: "Besøg Lovguiden",
-    openCase: "Læs case",
     finalCtaHeading: "Ønsker I et kvalificeret estimat på effekt og tilbagebetalingstid?",
     finalCtaDescription:
       "Book et møde. Vi vurderer use-case, integrationsdybde, governance-krav og forventet forretningsgevinst.",
     finalPrimaryCta: "Book et møde",
     finalSecondaryCta: "Kontakt",
-    caseSummary:
-      "Fuldautomatiseret vidensplatform, der dagligt indsamler og strukturerer dansk og europæisk lovstof fra officielle kilder.",
-    caseEffect:
-      "RAG med embeddings og re-ranking forankrer svar i konkrete kilder og leverer tydelig sporbarhed.",
   },
   en: {
     heroKicker: "Vertex Solutions ApS",
@@ -241,17 +232,11 @@ const pageCopyByLocale: Record<
     deliverablesLabel: "Deliverables",
     previousCasesHeading: "Previous cases",
     allCases: "See all",
-    visitLovguiden: "Visit Lovguiden",
-    openCase: "Open case",
     finalCtaHeading: "Do you want a qualified estimate of impact and payback time?",
     finalCtaDescription:
       "Book a meeting. We assess use case, integration depth, governance requirements, and expected business value.",
     finalPrimaryCta: "Book a meeting",
     finalSecondaryCta: "Contact",
-    caseSummary:
-      "Fully automated knowledge platform that collects and structures Danish and European legal content daily from official sources.",
-    caseEffect:
-      "RAG with embeddings and re-ranking anchors answers in concrete sources and provides clear traceability.",
   },
 };
 
@@ -259,17 +244,7 @@ export default async function Home() {
   const locale = await getLocale();
   const copy = pageCopyByLocale[locale];
   const method = methodByLocale[locale];
-  const cases = [
-    {
-      title: "Lovguiden",
-      summary: copy.caseSummary,
-      effect: copy.caseEffect,
-      image: "/Lovguiden.png",
-      imageAlt: "Lovguiden icon",
-      href: "https://www.lovguiden.dk/",
-      external: true,
-    },
-  ];
+  const cases = getCasesOverview(locale);
 
   return (
     <>
@@ -335,35 +310,36 @@ export default async function Home() {
               {copy.allCases}
             </Link>
           </div>
-          <div className="mt-10 max-w-3xl">
+          <div className="mt-10 grid gap-8 md:grid-cols-2">
             {cases.map((item) => (
-              <article key={item.title} className="surface-card card-hover px-8 py-8">
-                <div className="relative h-28 overflow-hidden rounded-[8px] border border-black/10 bg-[var(--surface-strong)]">
-                  <Image src={item.image} alt={item.imageAlt} fill className="object-contain p-4" />
-                </div>
-                <h3 className="mt-5 font-semibold">{item.title}</h3>
-                <p className="mt-4 text-[18px] leading-[1.6]">{item.summary}</p>
-                <p className="mt-3 text-[16px] text-[var(--brand-blue)]">{item.effect}</p>
-                {item.external ? (
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-6 inline-flex items-center gap-2 text-[16px] font-semibold text-[var(--brand-blue)]"
-                  >
-                    {copy.visitLovguiden}
-                    <ArrowRight className="size-4" />
-                  </a>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className="mt-6 inline-flex items-center gap-2 text-[16px] font-semibold text-[var(--brand-blue)]"
-                  >
-                    {copy.openCase}
-                    <ArrowRight className="size-4" />
-                  </Link>
-                )}
-              </article>
+              <Link key={item.slug} href={`/cases/${item.slug}`} className="group block">
+                <article className="surface-card card-hover h-full overflow-hidden">
+                  <div className="relative h-52 border-b border-black/10 bg-[var(--surface-strong)]">
+                    <Image src={item.image} alt={item.imageAlt} fill className="object-contain p-6" />
+                  </div>
+
+                  <div className="space-y-4 p-8">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <p className="text-[14px] font-medium uppercase tracking-[0.06em] text-black/70">{item.category}</p>
+                      <span className="rounded-full border border-black/15 px-3 py-1 text-[13px] font-medium text-black">
+                        {item.status}
+                      </span>
+                    </div>
+
+                    <h3 className="font-semibold">{item.title}</h3>
+                    <p className="text-[18px] leading-[1.6] text-black">{item.summary}</p>
+                    <ul className="space-y-1 text-[16px] leading-[1.55] text-black">
+                      {item.highlights.map((highlight) => (
+                        <li key={highlight}>• {highlight}</li>
+                      ))}
+                    </ul>
+                    <p className="inline-flex items-center gap-2 pt-1 text-[16px] font-semibold text-[var(--brand-blue)]">
+                      {item.openLabel}
+                      <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </p>
+                  </div>
+                </article>
+              </Link>
             ))}
           </div>
         </div>

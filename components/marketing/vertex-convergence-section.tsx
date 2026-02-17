@@ -114,7 +114,7 @@ export function VertexConvergenceSection({ locale }: { locale: Locale }) {
             <polygon points="-12,-7 16,0 -12,7" fill="#000000" transform="translate(1000 430)" />
           </svg>
 
-          <span className="pointer-events-none absolute left-[47%] top-[50%] z-20 size-[70px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#163e64]" />
+          <span className="pointer-events-none absolute left-[47%] top-[50%] z-20 size-[50px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#163e64]" />
 
           <article className="absolute left-0 top-4 w-[34%] space-y-3 text-[#000000]">
             <div className="flex items-center gap-4">
@@ -160,7 +160,7 @@ export function VertexConvergenceSection({ locale }: { locale: Locale }) {
 
           <div className="pointer-events-none absolute left-[49.7%] top-[52.6%] z-20">
             <p className="font-serif text-[64px] leading-[0.88] text-[#404040]">Vertex</p>
-            <p className="ml-2 mt-1 font-serif text-[30px] leading-[0.88] text-[var(--brand-blue)]">Solutions</p>
+            <p className="ml-3 mt-1 font-serif text-[25px] leading-[0.88] text-[var(--brand-blue)]">Solutions</p>
           </div>
 
           <article className="absolute right-0 top-[31%] w-[24%] space-y-3 text-[#000000]">
