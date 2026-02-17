@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vertex Solutions ApS hjemmeside
 
-## Getting Started
+Dansk marketinghjemmeside bygget i `Next.js` + `Tailwind CSS` med enterprise-clean design.
 
-First, run the development server:
+## Stack
+
+- `Next.js` (App Router)
+- `TypeScript`
+- `Tailwind CSS`
+- shadcn-inspirerede UI-komponenter
+- Kontakt-API med `Resend` eller `Formspree`
+
+## Kør lokalt
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Appen kører på `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+npm run start
+```
 
-## Learn More
+## Kontaktformular konfiguration
 
-To learn more about Next.js, take a look at the following resources:
+Kopiér `.env.example` til `.env.local` og udfyld enten Resend eller Formspree:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cp .env.example .env.local
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Resend (anbefalet):
 
-## Deploy on Vercel
+- `RESEND_API_KEY`
+- `CONTACT_TO_EMAIL`
+- `CONTACT_FROM_EMAIL`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Formspree fallback:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `FORMSPREE_ENDPOINT`

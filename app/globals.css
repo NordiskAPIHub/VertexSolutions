@@ -2,25 +2,98 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
+  --brand-blue: #163e64;
+  --brand-black: #000000;
+  --surface-strong: #f7f8fa;
+  --surface-muted: #f2f4f7;
+  --border-soft: #d5d9e0;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-inter);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-inter), sans-serif;
+  letter-spacing: -0.02em;
+  color: #000000;
+}
+
+h1 {
+  font-size: clamp(2.8rem, 6.2vw, 64px);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 40px);
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: clamp(1.45rem, 2.6vw, 28px);
+  line-height: 1.2;
+}
+
+::selection {
+  background: rgb(22 62 100 / 18%);
+}
+
+.section-shell {
+  margin-inline: auto;
+  width: min(1200px, calc(100% - 2rem));
+}
+
+.section-space {
+  padding-block: 100px;
+}
+
+.surface-card {
+  border: 1px solid rgb(0 0 0 / 10%);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
+}
+
+.card-hover {
+  transition: transform 0.25s ease;
+}
+
+.card-hover:hover {
+  transform: scale(1.025);
+}
+
+.network-bg {
+  background: #fff;
+}
+
+.fade-up {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+@media (max-width: 768px) {
+  .section-shell {
+    width: min(1180px, calc(100% - 1.25rem));
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  .section-space {
+    padding-block: 80px;
+  }
 }
